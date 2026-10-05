@@ -39,7 +39,7 @@ export default function ClubCard( {club} ) {
             <p className="club-location">Location: {club.location}</p>
             <p className="club-description"> {club.description} </p>
             <button className="club-button" onClick={handleClick}>Learn More</button>
-            <button onClick={toggleFavorite} className="favorite-club-button">{favorite ? "★Favorite" : "☆Add Favorite"}</button>
+            <button onClick={toggleFavorite} className="favorite-button">{favorite ? "★Favorite" : "☆Add Favorite"}</button>
         </article>
     )
 }

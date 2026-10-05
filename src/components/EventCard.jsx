@@ -39,7 +39,7 @@ export default function EventCard({ event }) {
             <p className="event-date-time"> {event.date} : {event.time} </p>
             <p className="event-desc"> {event.description} </p>
             <button onClick={handleClick} className="event-button"> View Event </button>
-            <button onClick={toggleFavorite} className="favorite-event-button"> {favorite ? "★Favorite" : "☆Add Favorite"} </button>
+            <button onClick={toggleFavorite} className="favorite-button"> {favorite ? "★Favorite" : "☆Add Favorite"} </button>
         </article>
     );
 }
