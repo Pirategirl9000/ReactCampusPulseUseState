@@ -141,20 +141,25 @@ export default function App() {
 
   // Filter the events by search query
   const filteredEvents = events.filter(event => {
-    const searchQuery = searchText.toLowerCase();
 
-    return (
-      (  // Check if search filter matches
-      event.title.toLowerCase().includes(searchQuery) ||
-      event.category.toLowerCase().includes(searchQuery) ||
-      event.location.toLowerCase().includes(searchQuery) ||
-      event.description.toLowerCase().includes(searchQuery)
-      ) &&
-      (  // Check if event dropwdown filter matches
-        selectedCategory === "all" || 
-        event.category === selectedCategory
-      )
-    );
+    // Check the category filter
+    const categoryMatch = selectedCategory === "all" || event.category === selectedCategory;
+    if (!categoryMatch) return false;   // We can leave early since the category doesn't match
+    else if (!searchText) return true;  // They don't have a search query
+
+    const searchQueries = searchText.toLowerCase().split("&");  // & is used to combine search queries
+
+    for (const query of searchQueries) {
+      if (
+        !event.title.toLowerCase().includes(query) &&
+        !event.category.toLowerCase().includes(query) &&
+        !event.location.toLowerCase().includes(query) &&
+        !event.description.toLowerCase().includes(query)
+      ) return false;
+    }
+
+    // Both the queries and category match
+    return true;
   });
 
     const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
