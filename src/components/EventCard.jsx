@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 /**
  * React Component that creates a card for a given event prop
  * @param {Object} event The event object containing all the info for displaying on the card
@@ -9,6 +11,12 @@
  * @returns {React.JSX.Component} EventCard React component
  */
 export default function EventCard({ event }) {
+    const [favorite, setFavorite] = useState(false);
+
+    function toggleFavorite() {
+        setFavorite(!favorite);
+    }
+
     /**
      * Handles clicks for the View Event button by displaying info about the event in an alert message
      */
@@ -40,6 +48,10 @@ export default function EventCard({ event }) {
             <button onClick={handleClick} className="event-button">
                 View Event
             </button>
+            <button onClick={toggleFavorite} className="favorite-event-button">
+                {favorite ? "★Favorite" : "☆Add Favorite"}
+            </button>
+
         </article>
     );
 }
