@@ -162,10 +162,10 @@ export default function App() {
     return true;
   });
 
-    const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
+  const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
 
-    const uniqueCategories = events.map(event => event.category)                                 //  Map each event to its category
-      .filter((value, index, array) => array.length < 10 && array.indexOf(value) === index)      //  Filter unique categories and limit to 10 categories
+  const uniqueCategories = events.map(event => event.category)                                 //  Map each event to its category
+    .filter((value, index, array) => array.length < 10 && array.indexOf(value) === index)      //  Filter unique categories and limit to 10 categories
 
   return (
     <>
