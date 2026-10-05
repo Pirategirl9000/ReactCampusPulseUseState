@@ -12,6 +12,7 @@ import { useState } from 'react';
  */
 export default function App() {
   const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
   const events = [
     {
@@ -135,14 +136,22 @@ export default function App() {
     const searchQuery = searchText.toLowerCase();
 
     return (
+      (  // Check if search filter matches
       event.title.toLowerCase().includes(searchQuery) ||
       event.category.toLowerCase().includes(searchQuery) ||
       event.location.toLowerCase().includes(searchQuery) ||
       event.description.toLowerCase().includes(searchQuery)
+      ) &&
+      (  // Check if event dropwdown filter matches
+        event.category === "all" || 
+        event.category === selectedCategory
+      )
     );
   });
 
     const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
+    const uniqueCategories = events.map(event => event.category)                                 //  Map each event to its category
+      .filter((value, index, array) => array.length < 10 && array.indexOf(value) === index)      //  Filter unique categories and limit to 10 categories
 
   return (
     <>
@@ -155,7 +164,14 @@ export default function App() {
         <p id="events-subheader">There {(pluralEvents) ? "are" : "is"} {filteredEvents.length} upcoming {(pluralEvents) ? "events" : "event"}</p>
       </div>
 
-      <input type="search" placeholder="Search Events" value={searchText} onChange={e => {setSearchText(e.target.value)}}/>
+      <input className="event-search-filter" type="search" placeholder="Search Events" value={searchText} onChange={e => {setSearchText(e.target.value)}}/>
+
+      <select className="event-category-filter" value={selectedCategory} onChange={e => {setSelectedCategory(e.target.value)}}>
+        <option value="all">All Categories</option>
+
+        {/* We map each unique category up to 10 to an option */}
+        {uniqueCategories.map(cat => <option value={cat}>{cat}</option>)}
+      </select>
 
       <section className="event-grid">
           {
