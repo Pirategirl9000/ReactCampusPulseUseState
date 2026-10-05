@@ -33,28 +33,13 @@ export default function EventCard({ event }) {
 
     return (
         <article className="event-card">
-            <h2 className="event-title">
-                {event.title}
-            </h2>
-            <p className="event-category">
-                Category: {event.category}
-            </p>
-            <p className="event-location">
-                Location: {event.location}
-            </p>
-            <p className="event-date-time">
-                {event.date} : {event.time}
-            </p>
-            <p className="event-desc">
-                {event.description}
-            </p>
-            <button onClick={handleClick} className="event-button">
-                View Event
-            </button>
-            <button onClick={toggleFavorite} className="favorite-event-button">
-                {favorite ? "★Favorite" : "☆Add Favorite"}
-            </button>
-
+            <h2 className="event-title"> {event.title} </h2>
+            <p className="event-category"> Category: {event.category} </p>
+            <p className="event-location"> Location: {event.location} </p>
+            <p className="event-date-time"> {event.date} : {event.time} </p>
+            <p className="event-desc"> {event.description} </p>
+            <button onClick={handleClick} className="event-button"> View Event </button>
+            <button onClick={toggleFavorite} className="favorite-event-button"> {favorite ? "★Favorite" : "☆Add Favorite"} </button>
         </article>
     );
 }
