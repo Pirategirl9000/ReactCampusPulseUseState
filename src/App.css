@@ -50,6 +50,7 @@ h2 {
 
 .event-grid button, .club-grid button {
   background: rgb(37, 37, 37);
+  color: white;
   border-radius: 1em;
 }
 
