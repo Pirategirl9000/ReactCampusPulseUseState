@@ -13,6 +13,9 @@ import { useState } from 'react';
 export default function EventCard({ event }) {
     const [favorite, setFavorite] = useState(false);
 
+    /**
+     * Toggles the state of favorite for this event
+     */
     function toggleFavorite() {
         setFavorite(!favorite);
     }
