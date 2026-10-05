@@ -17,6 +17,9 @@ export default function App() {
   const [searchClubsText, setSearchClubsText] = useState("");
   const [selectedClubCategory, setSelectedClubCategory] = useState("all");
 
+  /**
+   * The events as an object array
+   */
   const events = [
     {
       id: 1,
@@ -65,6 +68,9 @@ export default function App() {
     }
   ]
 
+  /**
+   * The clubs as an object array
+   */
   const clubs = [
     {
       id: 1,
