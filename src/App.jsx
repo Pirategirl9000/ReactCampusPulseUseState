@@ -11,8 +11,11 @@ import { useState } from 'react';
  * @returns A parent component to all components of the webpage
  */
 export default function App() {
-  const [searchText, setSearchText] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchEventsText, setSearchEventsText] = useState("");
+  const [selectedEventCategory, setSelectedEventCategory] = useState("all");
+
+  const [searchClubsText, setSearchClubsText] = useState("");
+  const [selectedClubCategory, setSelectedClubCategory] = useState("all");
 
   const events = [
     {
@@ -133,21 +136,28 @@ export default function App() {
    * Resets the search filters to their initial state
    */
   function resetFilters() {
-    setSearchText("");
-    setSelectedCategory("all");
+    setSearchEventsText("");
+    setSelectedEventCategory("all");
   }
 
-
+  /**
+   * Returns an array of unique categories given an array of objects with a category property
+   * @param {Array} arr The array of objects with a category property
+   * @param {Number} limit The maximum amount of items that should be in the array (Optional)
+   */
+  function getUniqueCategories(arr, limit=-1) {
+    return arr.map(item => item.category).filter((value, index, array) => (limit === -1 || arr.length < limit) && array.indexOf(value) === index);
+  }
 
   // Filter the events by search query
   const filteredEvents = events.filter(event => {
 
     // Check the category filter
-    const categoryMatch = selectedCategory === "all" || event.category === selectedCategory;
+    const categoryMatch = selectedEventCategory === "all" || event.category === selectedEventCategory;
     if (!categoryMatch) return false;   // We can leave early since the category doesn't match
-    else if (!searchText) return true;  // They don't have a search query
+    else if (!searchEventsText) return true;  // They don't have a search query
 
-    const searchQueries = searchText.toLowerCase().split("&");  // & is used to combine search queries
+    const searchQueries = searchEventsText.toLowerCase().split("&");  // & is used to combine search queries
 
     for (const query of searchQueries) {
       if (
@@ -162,10 +172,27 @@ export default function App() {
     return true;
   });
 
-  const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
+  const filteredClubs = clubs.filter(club => {
+    const categoryMatch = selectedClubCategory === "all" || club.category === selectedClubCategory;
+    if (!categoryMatch) return false;
+    else if (!searchClubsText) return true;
 
-  const uniqueCategories = events.map(event => event.category)                                 //  Map each event to its category
-    .filter((value, index, array) => array.length < 10 && array.indexOf(value) === index)      //  Filter unique categories and limit to 10 categories
+    const searchQueries = searchClubsText.toLowerCase().split("&");
+
+    for (const query of searchQueries) {
+      if (
+        !club.name.toLowerCase().includes(query) &&
+        !club.category.toLowerCase().includes(query) &&
+        !club.location.toLowerCase().includes(query) &&
+        !club.meeting.toLowerCase().includes(query) &&
+        !club.description.toLowerCase().includes(query)
+      ) return false;
+    }
+
+    return true;
+  });
+
+  const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
 
   return (
     <>
@@ -178,13 +205,12 @@ export default function App() {
         <p id="events-subheader">There {(pluralEvents) ? "are" : "is"} {filteredEvents.length} upcoming {(pluralEvents) ? "events" : "event"}</p>
       </div>
 
-      <input className="event-search-filter" type="search" placeholder="Search Events" value={searchText} onChange={e => {setSearchText(e.target.value)}}/>
+      <input className="event-search-filter" type="search" placeholder="Search Events" value={searchEventsText} onChange={e => {setSearchEventsText(e.target.value)}}/>
 
-      <select className="event-category-filter" value={selectedCategory} onChange={e => {setSelectedCategory(e.target.value)}}>
+      <select className="event-category-filter" value={selectedEventCategory} onChange={e => {setSelectedEventCategory(e.target.value)}}>
         <option value="all" key="all">All Categories</option>
 
-        {/* We map each unique category up to 10 to an option */}
-        {uniqueCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+        {getUniqueCategories(events, 10).map(cat => <option key={cat} value={cat}>{cat}</option>)}
       </select>
 
       <button className="reset-filter-button" onClick={resetFilters}>Reset Filters</button>
@@ -203,9 +229,18 @@ export default function App() {
         <p id="clubs-subheader">{(clubs.length > 1) ? "Join one of our many clubs and get involved on campus" : "Join our club or start one of your own"}</p>
       </div>
 
+      <input className="club-search-filter" type="search" placeholder="Search Clubs" value={searchClubsText} onChange={e => {setSearchClubsText(e.target.value)}}/>
+
+      <select className="club-category-filter" value={selectedClubCategory} onChange={e => {setSelectedClubCategory(e.target.value)}}>
+        <option value="all" key="all">All Categories</option>
+
+        {/* We map each unique category up to 10 to an option */}
+        {getUniqueCategories(clubs, 10).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+      </select>
+
       <section className="club-grid">
         {
-        clubs.sort((a, b) => alphabetCompare(a.name, b.name))       // Sort them by club name asc
+        filteredClubs.sort((a, b) => alphabetCompare(a.name, b.name))       // Sort them by club name asc
         .map(club => <ClubCard key={club.id} club={club}/>)          // Map them to club cards
         }
       </section>
