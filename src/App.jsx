@@ -129,6 +129,14 @@ export default function App() {
     return (a.length > b.length) ? 1 : -1;  // Return which ever string is shorter
   }
 
+  /**
+   * Resets the search filters to their initial state
+   */
+  function resetFilters() {
+    setSearchText("");
+    setSelectedCategory("all");
+  }
+
 
 
   // Filter the events by search query
@@ -143,13 +151,14 @@ export default function App() {
       event.description.toLowerCase().includes(searchQuery)
       ) &&
       (  // Check if event dropwdown filter matches
-        event.category === "all" || 
+        selectedCategory === "all" || 
         event.category === selectedCategory
       )
     );
   });
 
     const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
+
     const uniqueCategories = events.map(event => event.category)                                 //  Map each event to its category
       .filter((value, index, array) => array.length < 10 && array.indexOf(value) === index)      //  Filter unique categories and limit to 10 categories
 
@@ -167,11 +176,13 @@ export default function App() {
       <input className="event-search-filter" type="search" placeholder="Search Events" value={searchText} onChange={e => {setSearchText(e.target.value)}}/>
 
       <select className="event-category-filter" value={selectedCategory} onChange={e => {setSelectedCategory(e.target.value)}}>
-        <option value="all">All Categories</option>
+        <option value="all" key="all">All Categories</option>
 
         {/* We map each unique category up to 10 to an option */}
-        {uniqueCategories.map(cat => <option value={cat}>{cat}</option>)}
+        {uniqueCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
       </select>
+
+      <button className="reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
       <section className="event-grid">
           {
