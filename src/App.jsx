@@ -216,10 +216,14 @@ export default function App() {
 
     <main className="content-section">
 
+      {/* EVENTS SECTION */}
+
       <div className="section-heading">
         <h2 id="events" className="events-header">Upcoming Events</h2>
         <p id="events-subheader">There {(pluralEvents) ? "are" : "is"} {filteredEvents.length} upcoming {(pluralEvents) ? "events" : "event"}</p>
       </div>
+
+      {/* FILTERING FOR EVENTS */}
 
       <input className="event-search-filter" type="search" placeholder="Search Events" value={searchEventsText} onChange={e => {setSearchEventsText(e.target.value)}}/>
 
@@ -231,19 +235,30 @@ export default function App() {
 
       <button className="reset-filter-button" id="events-reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
-      {filteredEvents.length === 0 ? (<p>No events match your search</p>) : (<section className="event-grid">
-          {
-          filteredEvents
-            .sort((a, b) => alphabetCompare(a.title, b.title))  // Sort them by title ascending
-            .map(event => <EventCard key={event.id} event={event}/>)  // Map them to an eventCard
-          }
-      </section>)}
+      {/* DISPLAY THE EVENT CARDS IF ANY */}
 
+      {(filteredEvents.length === 0)
+       ? (
+        <p>No events match your search</p>
+       ) 
+       : (
+        <section className="event-grid">
+            {
+            filteredEvents
+              .sort((a, b) => alphabetCompare(a.title, b.title))  // Sort them by title ascending
+              .map(event => <EventCard key={event.id} event={event}/>)  // Map them to an eventCard
+            }
+        </section>
+      )}
+
+      {/* CLUBS SECTION */}
 
       <div className="section-heading">
         <h2 id="clubs" className="clubs-header">Campus Clubs</h2>
         <p id="clubs-subheader">{(clubs.length > 1) ? "Join one of our many clubs and get involved on campus" : "Join our club or start one of your own"}</p>
       </div>
+
+      {/* FILTERING FOR CLUBS */}
 
       <input className="club-search-filter" type="search" placeholder="Search Clubs" value={searchClubsText} onChange={e => {setSearchClubsText(e.target.value)}}/>
 
@@ -256,18 +271,24 @@ export default function App() {
 
       <button className="reset-filter-button" id="clubs-reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
-      <section className="club-grid">
-        {
-        filteredClubs.sort((a, b) => alphabetCompare(a.name, b.name))       // Sort them by club name asc
-        .map(club => <ClubCard key={club.id} club={club}/>)          // Map them to club cards
-        }
-      </section>
+      {/* DISPLAY THE CLUB CARDS IF ANY */}
 
-
+      { (filteredClubs.length === 0) 
+        ? (
+          <p>No clubs match your search</p>
+        ) 
+        : (
+          <section className="club-grid">
+            {
+            filteredClubs.sort((a, b) => alphabetCompare(a.name, b.name))       // Sort them by club name asc
+            .map(club => <ClubCard key={club.id} club={club}/>)                 // Map them to club cards
+            }
+          </section>
+        )
+      }
     </main>
 
     <Footer />
-
     </>
   );
 }
