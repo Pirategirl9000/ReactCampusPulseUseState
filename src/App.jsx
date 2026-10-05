@@ -133,11 +133,22 @@ export default function App() {
   }
 
   /**
-   * Resets the search filters to their initial state
+   * Resets the search filters to their initial state, determines who to reset based on event.target.id
+   * @param {Event} e The event that spawned this function call
    */
-  function resetFilters() {
-    setSearchEventsText("");
-    setSelectedEventCategory("all");
+  function resetFilters(e) {
+    const targetId = e.target.id;
+
+    switch (targetId) {
+      case "clubs-reset-filter-button":
+        setSearchClubsText("");
+        setSelectedClubCategory("all");
+        break;
+      case "events-reset-filter-button":
+        setSearchEventsText("");
+        setSelectedEventCategory("all");
+        break;
+    }
   }
 
   /**
@@ -149,7 +160,9 @@ export default function App() {
     return arr.map(item => item.category).filter((value, index, array) => (limit === -1 || arr.length < limit) && array.indexOf(value) === index);
   }
 
-  // Filter the events by search query
+  /**
+   * The events filtered by search queries
+   */
   const filteredEvents = events.filter(event => {
 
     // Check the category filter
@@ -172,6 +185,9 @@ export default function App() {
     return true;
   });
 
+  /**
+   * The clubs filtered by search queries, for more robust documentation view {@link filteredEvents}
+   */
   const filteredClubs = clubs.filter(club => {
     const categoryMatch = selectedClubCategory === "all" || club.category === selectedClubCategory;
     if (!categoryMatch) return false;
@@ -213,7 +229,7 @@ export default function App() {
         {getUniqueCategories(events, 10).map(cat => <option key={cat} value={cat}>{cat}</option>)}
       </select>
 
-      <button className="reset-filter-button" onClick={resetFilters}>Reset Filters</button>
+      <button className="reset-filter-button" id="events-reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
       {filteredEvents.length === 0 ? (<p>No events match your search</p>) : (<section className="event-grid">
           {
@@ -237,6 +253,8 @@ export default function App() {
         {/* We map each unique category up to 10 to an option */}
         {getUniqueCategories(clubs, 10).map(cat => <option key={cat} value={cat}>{cat}</option>)}
       </select>
+
+      <button className="reset-filter-button" id="clubs-reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
       <section className="club-grid">
         {
