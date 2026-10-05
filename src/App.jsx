@@ -4,11 +4,14 @@ import Footer from "./components/Footer.jsx";
 import EventCard from "./components/EventCard.jsx";
 import ClubCard from "./components/ClubCard.jsx";
 
+import { useState } from 'react';
+
 /**
  * A React Component that contains all the info about the page
  * @returns A parent component to all components of the webpage
  */
 export default function App() {
+  const [searchText, setSearchText] = useState("");
 
   const events = [
     {
@@ -125,7 +128,21 @@ export default function App() {
     return (a.length > b.length) ? 1 : -1;  // Return which ever string is shorter
   }
 
-  const multipleEvents = events.length > 1;
+
+
+  // Filter the events by search query
+  const filteredEvents = events.filter(event => {
+    const searchQuery = searchText.toLowerCase();
+
+    return (
+      event.title.toLowerCase().includes(searchQuery) ||
+      event.category.toLowerCase().includes(searchQuery) ||
+      event.location.toLowerCase().includes(searchQuery) ||
+      event.description.toLowerCase().includes(searchQuery)
+    );
+  });
+
+    const pluralEvents = filteredEvents.length > 1 || filteredEvents.length === 0;  // When we have 0 events we say there 'are' 0 'events'
 
   return (
     <>
@@ -135,13 +152,16 @@ export default function App() {
 
       <div className="section-heading">
         <h2 id="events" className="events-header">Upcoming Events</h2>
-        <p id="events-subheader">There {(multipleEvents) ? "are" : "is"} {events.length} upcoming {(multipleEvents) ? "events" : "event"}</p>
+        <p id="events-subheader">There {(pluralEvents) ? "are" : "is"} {filteredEvents.length} upcoming {(pluralEvents) ? "events" : "event"}</p>
       </div>
+
+      <input type="search" placeholder="Search Events" value={searchText} onChange={e => {setSearchText(e.target.value)}}/>
 
       <section className="event-grid">
           {
-          events.sort((a, b) => alphabetCompare(a.title, b.title))  // Sort them by title ascending
-          .map(event => <EventCard key={event.id} event={event}/>)  // Map them to an eventCard
+          filteredEvents
+            .sort((a, b) => alphabetCompare(a.title, b.title))  // Sort them by title ascending
+            .map(event => <EventCard key={event.id} event={event}/>)  // Map them to an eventCard
           }
       </section>
 
