@@ -184,13 +184,13 @@ export default function App() {
 
       <button className="reset-filter-button" onClick={resetFilters}>Reset Filters</button>
 
-      <section className="event-grid">
+      {filteredEvents.length === 0 ? (<p>No events match your search</p>) : (<section className="event-grid">
           {
           filteredEvents
             .sort((a, b) => alphabetCompare(a.title, b.title))  // Sort them by title ascending
             .map(event => <EventCard key={event.id} event={event}/>)  // Map them to an eventCard
           }
-      </section>
+      </section>)}
 
 
       <div className="section-heading">
